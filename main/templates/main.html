@@ -1,210 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maverick Sports E-Commerce</title>
-    <style>
-        /* Reset some default styles */
-        body, h1, h2, h3, p, ul, li {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
+{% extends 'base.html' %}
+{% block content %}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            color: #333;
-            background-color: #f4f4f4;
-            line-height: 1.6;
-        }
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Maverick Sports</h1>
+        <p>Your go-to destination for top sports gear and apparel.</p>
+        <a href="#shop" class="btn">Shop Now</a>
+    </div>
+</section>
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+<!-- User Info -->
+<section class="user-info">
+    <h2>User Details</h2>
+    <h5>NPM:</h5>
+    <p>{{ npm }}</p>
 
-        header .logo h1 {
-            font-size: 1.8rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
+    <h5>Name:</h5>
+    <p>{{ name }}</p>
 
-        nav ul {
-            display: flex;
-            gap: 1.5rem;
-        }
+    <h5>Class:</h5>
+    <p>{{ class }}</p>
+</section>
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
+<!-- Featured Products Section -->
+<section class="products" id="shop">
+    <h2>Featured Products</h2>
+    {% if not mood_entries %}
+    <p>No products available at the moment.</p>
+    {% else %}
+    <table>
+        <tr>
+            <th>Mood Name</th>
+            <th>Time</th>
+            <th>Feeling</th>
+            <th>Mood Intensity</th>
+        </tr>
 
-        nav ul li a:hover {
-            color: #ff5733;
-        }
+        {% for mood_entry in mood_entries %}
+        <tr>
+            <td>{{ mood_entry.mood }}</td>
+            <td>{{ mood_entry.time }}</td>
+            <td>{{ mood_entry.feelings }}</td>
+            <td>{{ mood_entry.mood_intensity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</section>
 
-        .hero {
-            background: url('hero-image.jpg') no-repeat center center/cover;
-            color: white;
-            padding: 6rem 2rem;
-            text-align: center;
-        }
+<br />
 
-        .hero-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
+<!-- Call to Action -->
+<a href="{% url 'main:create_mood_entry' %}">
+    <button>Add Type of Product You Want to Buy</button>
+</a>
 
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
+{% endblock content %}
 
-        .hero-content .btn {
-            background-color: #ff5733;
-            color: white;
-            padding: 0.7rem 2rem;
-            text-decoration: none;
-            font-size: 1rem;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
+<!-- Add some styling in your CSS file -->
+<style>
+    body{
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+    }
+    .hero {
+        background: url('your-hero-image.jpg') no-repeat center center/cover;
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
 
-        .hero-content .btn:hover {
-            background-color: #e94e1b;
-        }
+    .hero-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
 
-        .products {
-            padding: 4rem 2rem;
-            background-color: #fff;
-            text-align: center;
-        }
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
 
-        .products h2 {
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
+    .hero-content .btn {
+        background-color: #ff5733;
+        color: white;
+        padding: 0.7rem 2rem;
+        text-decoration: none;
+        font-size: 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
 
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
+    .hero-content .btn:hover {
+        background-color: #e94e1b;
+    }
 
-        .product-card {
-            background-color: #f4f4f4;
-            padding: 1.5rem;
-            border-radius: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    .user-info {
+        padding: 2rem;
+        background-color: #f4f4f4;
+        text-align: center;
+    }
 
-        .product-card img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
+    .user-info h2 {
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
 
-        .product-card h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
+    .products {
+        padding: 2rem;
+        background-color: #fff;
+    }
 
-        .product-card p {
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            color: #ff5733;
-        }
+    .products h2 {
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
 
-        .product-card button {
-            background-color: #333;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .products table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        .product-card button:hover {
-            background-color: #555;
-        }
+    .products table th, .products table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
+    .products table th {
+        background-color: #f2f2f2;
+    }
 
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            margin-top: 2rem;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="logo">
-            <h1>Maverick Sports</h1>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#shop">Shop</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    .products table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h2>Discover Your Style</h2>
-            <p>Explore our collection of exclusive and trendy items.</p>
-            <a href="#shop" class="btn">Shop Now</a>
-        </div>
-    </section>
-
-    <section class="products" id="shop">
-        <h2>Featured Products</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <img src="product1.jpg" alt="Product 1">
-                <h3>Product 1</h3>
-                <p>$29.99</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product-card">
-                <img src="product2.jpg" alt="Product 2">
-                <h3>Product 2</h3>
-                <p>$49.99</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product-card">
-                <img src="product3.jpg" alt="Product 3">
-                <h3>Product 3</h3>
-                <p>$39.99</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product-card">
-                <img src="product4.jpg" alt="Product 4">
-                <h3>Product 4</h3>
-                <p>$59.99</p>
-                <button>Add to Cart</button>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 Maverick Sports. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+    .products table tr:hover {
+        background-color: #ddd;
+    }
+</style>
